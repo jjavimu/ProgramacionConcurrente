@@ -2,7 +2,7 @@ package parte1;
 
 import java.io.Serializable;
 
-public class Msg_solicitud_fichero extends Mensaje {
+public class Msg_solicitud_fichero implements Mensaje, Serializable {
     private String nombre_fichero;
     private TipoMensaje tipomsg;
     //faltan atributos de origen y destino

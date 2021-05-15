@@ -1,0 +1,16 @@
+
+DUDAS PRACTICA
+- Atributos: como el main es static los atributos tambien tienen que serlo. No tiene sentido, no? - Cliente, Servidor
+- por que necesito que Mensaje sea clase abstracta? no puedo tenerlo como una clase normal?
+- origen y destino que es? en mensaje (ip?)
+
+
+
+COSAS QUE HAY QUE HACER
+- Emisor/Receptor lo de los ficheros
+- Organizar los puertos de los distintos sitios
+- Probar la entrega 1 en distintos ordenadores (IP)
+
+- Hilo cliente fout y luego en OS tambien uso fout ¿Hay que sincronizar? 
+  ¿tengo dos hilos escribiendo en el mismo?   ---------------------------------------- LOCKS
+  no es variable global

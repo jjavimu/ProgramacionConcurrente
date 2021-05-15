@@ -23,7 +23,7 @@ public class OC implements Runnable {
             ObjectInputStream fin = new ObjectInputStream(si.getInputStream());
 
             // Conexion establecida
-            System.out.println("Conexion establecida en Servidor (oc)");
+            System.out.println("[OC]: Conexion establecida con el Cliente");
 
             // Se queda esperando a que le indiquen el nombre del fichero
             Mensaje m = (Mensaje) fin.readObject();
@@ -31,20 +31,29 @@ public class OC implements Runnable {
             System.out.println("El cliente me ha pedido el fichero: " + m.getNombreFichero());            
 
             if (m.getTipo() == TipoMensaje.MSG_SOLICITUD_FICHERO) {
-                System.out.println("Lo voy a buscar"); 
+                System.out.print("Buscando...");  
                 // Buscar en la base de datos del servidor el fichero
+                Fichero f_enviar = null;
                 for (Fichero f : listF) {
                     // Enviamos el fichero
-                    System.out.println("Buscando..."); 
                     if (f.getNombre().compareTo(m.getNombreFichero()) == 0) {
-                        System.out.println("Lo he encontrado"); 
-                        fout.writeObject(f);
-                        fout.flush();
-                        System.out.println("Se lo he mandado"); 
+                        f_enviar = f;
+                        break;
                     }
                 }
-
+                if (f_enviar != null){
+                    System.out.println("Lo he encontrado"); 
+                    fout.writeObject(f_enviar);
+                    fout.flush();
+                    System.out.println("Se lo he mandado"); 
+                }
+                else {
+                    System.out.println("No he encontrado el fichero " + m.getNombreFichero()); 
+                }
             }
+
+            // Conexion finalizada
+            System.out.println("[OC]: Conexion finalizada con el Cliente");
 
             fout.close();
             fin.close();
@@ -52,9 +61,10 @@ public class OC implements Runnable {
 
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error en OC");
+            System.out.println("[OC]: Error de entrada/salida");
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("[OC]: Error");
         }
 
     }

@@ -22,11 +22,9 @@ public class OS implements Runnable {
             ObjectInputStream finc = new ObjectInputStream(sc.getInputStream());
 
             // Conexion establecida
-            System.out.println("Conexion establecida en Cliente (os)");
+            System.out.println("[OS]: Conexion establecida con el servidor");
 
             Mensaje m = new Msg_solicitud_fichero(nombre_fichero);
-
-           
 
             foutc.writeObject(m);
             foutc.flush();
@@ -40,12 +38,13 @@ public class OS implements Runnable {
             foutc.close();
             finc.close();
             sc.close();
-
+            System.out.println("[OS]: Conexion finalizada con el servidor");
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error en OS");
+            System.out.println("[OS]: Error de entrada/salida");
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("[OS]: Error");
         }
     }
 }

@@ -15,10 +15,13 @@ public class Servidor {
         // Ficheros
         listF = new ArrayList<Fichero>();
         listF.add(new Fichero("a.txt"));
+        listF.add(new Fichero("b.txt"));
+        listF.add(new Fichero("c.txt"));
 
-        System.out.println("Servidor creado");
+        System.out.println("Iniciando servidor....");
         System.out.print("Ficheros disponibles: ");
         System.out.println(listF);
+        System.out.println("-----------------------");
 
 
         // Creo el socket del servidor

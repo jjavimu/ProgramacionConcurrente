@@ -70,9 +70,9 @@ public class Cliente{
                     // Enviar mensaje MSG_SOLICITUD_FICHERO
                     lock.takeLock(0); 
                     System.out.print("Indica el nombre del fichero que quieres descargar: ");
-                    lock.releaseLock(0);
-
                     String nombre_fichero = teclado.nextLine();
+                    lock.releaseLock(0);
+                    
                     control_fout.acquire();
                     foutc.writeObject(new Msg_solicitud_fichero(nombre_fichero,nombre_usuario));
                     foutc.flush();

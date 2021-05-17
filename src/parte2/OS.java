@@ -28,7 +28,9 @@ public class OS implements Runnable {
             // Booleano para cerrar conexion
             boolean ok = true;
             while (ok) {
+                
                 Mensaje m = (Mensaje) finc.readObject();
+                
 
                 switch (m.getTipo()) {
                     case MSG_CONFIRM_CONEXION:
@@ -57,7 +59,7 @@ public class OS implements Runnable {
                         foutc.flush();
                         control_fout.release();
                         // Crear proceso EMISOR y espero en accept la conexion
-                        (new Emisor(nombre_fichero,puerto)).run();
+                        new Thread((new Emisor(nombre_fichero,puerto))).start();
                         break;
                     case MSG_PREPARADO_SC:
                         // El servidor me avisa de que el cliente que tiene el fichero que quiero esta
@@ -68,7 +70,7 @@ public class OS implements Runnable {
                         String IPemisor = msg3.getIP();
 
                         // Crear proceso RECEPTOR
-                        (new Receptor(puerto_emisor,IPemisor)).run();
+                        (new Thread((new Receptor(puerto_emisor,IPemisor)))).start();
                         break;
                     case MSG_CONFIRM_CERRAR_CONEXION:
                         // imprimir adios por standard output
@@ -94,5 +96,6 @@ public class OS implements Runnable {
             System.out.print("Error OS");
         }
     }
+
 
 }

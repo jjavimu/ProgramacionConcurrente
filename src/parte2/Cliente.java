@@ -9,13 +9,15 @@ import java.util.concurrent.Semaphore;
 import parte2.Mensajes.*;
 import parte2.SinCon.*;
 
-public class Cliente {
+public class Cliente{
     // Nombre usuario
     // Dir ip de la maquina
     // Socket y flujos con el servidor
 
+
+
     public static void main(String[] args) throws Exception { // main : interactuar con el usuario
-        String IP = "localhost"; // IP del servidor
+        String IP = "localhost"; // IP del servidor  
 
         // Preguntar el nombre del usuario
         Scanner teclado = new Scanner(System.in);
@@ -31,12 +33,15 @@ public class Cliente {
         // Le enviamos el cerrojo necesario para la sincronizacion de la salida por pantalla
         Lock lock = new LockBakery(2); // 0-Cliente , 1-OS
         Semaphore control_fout = new Semaphore(1);
-        (new OS(sc,finc,foutc,lock,control_fout)).run();
+        (new Thread(new OS(sc,finc,foutc,lock,control_fout))).start();
         
-
+        System.out.println("hola");
+        
         // Enviar mensaje de conexion al servidor
+        control_fout.acquire();
         foutc.writeObject(new Msg_conexion(nombre_usuario));
         foutc.flush();
+        control_fout.release();
 
         // Booleano para cerrar conexion
         boolean ok = true;
@@ -44,10 +49,10 @@ public class Cliente {
         while (ok) {
 
             lock.takeLock(0); 
-            System.out.print("Menu de acciones (elige un numero): ");
-            System.out.print("1 - Consultar el nombre de los usuarios conectados y su informacion");
-            System.out.print("2 - Descargar informacion");
-            System.out.print("3 - Desconectarse del servidor");
+            System.out.println("Menu de acciones (elige un numero): ");
+            System.out.println("1 - Consultar el nombre de los usuarios conectados y su informacion");
+            System.out.println("2 - Descargar informacion");
+            System.out.println("3 - Desconectarse del servidor");
             lock.releaseLock(0);
 
             int opcion = teclado.nextInt();

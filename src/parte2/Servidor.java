@@ -33,7 +33,7 @@ public class Servidor {
         try {
             // Leer fichero con los usuaros registrados y todos sus datos
             // Guardamos la info SOLO en el monitor tablaUsuarios
-            File usuarios = new File("src/parte2/ServidorRecursos/users.txt");
+            File usuarios = new File("parte2/ServidorRecursos/users.txt");
             FileReader fr = new FileReader(usuarios);
             BufferedReader br = new BufferedReader(fr);
             String linea;
@@ -68,7 +68,7 @@ public class Servidor {
             // Me quedo esperando a la peticion de inicio de sesion
             Socket si = ss.accept();
             // Asocio un hilo de ejecucion a cada usuario
-            (new OC(si, tablaUsuarios, tablaFicheros, tablaCanales, puerto, sem_puerto)).run();
+            (new Thread((new OC(si, tablaUsuarios, tablaFicheros, tablaCanales, puerto, sem_puerto)))).start();
         }
     }
 }

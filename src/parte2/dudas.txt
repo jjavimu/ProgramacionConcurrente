@@ -3,14 +3,20 @@ DUDAS PRACTICA
 - Atributos: como el main es static los atributos tambien tienen que serlo. No tiene sentido, no? - Cliente, Servidor
 - por que necesito que Mensaje sea clase abstracta? no puedo tenerlo como una clase normal?
 - origen y destino que es? en mensaje (ip?)
+- cuando actualizo exactamente en el servidor la tabla?
+- contador de puertos no entendi tu explicacion
+- fout de nuevo duda
+- puertos e IP
+- semaforos y locks los enviamos todo el rato
+
 
 
 
 COSAS QUE HAY QUE HACER
-- Emisor/Receptor lo de los ficheros
+- FICHEROS: Emisor/Receptor + Servidor (Actualizar fichero al salirse el servidor)
 - Organizar los puertos de los distintos sitios
-- Probar la entrega 1 en distintos ordenadores (IP)
-
-- Hilo cliente fout y luego en OS tambien uso fout ¿Hay que sincronizar? 
-  ¿tengo dos hilos escribiendo en el mismo?   ---------------------------------------- LOCKS
-  no es variable global
+- Probar la entrega 1 en distintos ordenadores (IP). ORGANIZAR LAS IP.
+- MonitorFicheros: algo mas elaborado para ver que usuario le da el fichero
+- Escritura - exclusion mutua, lectura no (readers and writers) -- monitores/tablas
+- CONTROL DE FALLOS EN LOS MENSAJES: los dos del OC (los dos system.out) -- controlar EM si voy a dejarlo
+- Lo de las IP

@@ -9,15 +9,19 @@ import java.nio.file.Files;
 
 public class Emisor implements Runnable { // Funciona como el servidor de la entrega 1
     private String nombre_fichero;
+    private int puerto;
 
-    public Emisor(String nombre_fichero) {
+    public Emisor(String nombre_fichero, int puerto) {
         this.nombre_fichero = nombre_fichero;
+        this.puerto = puerto;
     }
+
 
     public void run() {
         try {
+
             // Crear ServerSocket
-            ServerSocket es = new ServerSocket(500); // Cambiar puertos *******
+            ServerSocket es = new ServerSocket(puerto);
 
             // Me quedo esperando a la peticion del receptor
             Socket si = es.accept();

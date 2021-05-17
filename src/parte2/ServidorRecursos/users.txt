@@ -1,7 +1,2 @@
-Usuario Angela
-IP ----
-a.txt
-b.txt
-Usuario Javi
-IP ----
-c.txt
+Angela localhost a.txt b.txt
+Javi localhost c.txt

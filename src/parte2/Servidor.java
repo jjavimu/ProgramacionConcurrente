@@ -13,7 +13,6 @@ import java.util.concurrent.Semaphore;
 import parte2.SinCon.*;
 
 public class Servidor {
-    // Contadores globales con acceso seguro (crear canales-puertos (lo de que tardan en quedarse libres))
     // direccion IP
 
 
@@ -23,11 +22,12 @@ public class Servidor {
         // Tabla fichero - usuarios
         MFicheros tablaFicheros = new MFicheros(); // de los conectados
         // Tabla usuario - flujos E/S
-        MCanales tablaCanales = new MCanales(); // de los conectados
+        Canales tablaCanales = new Canales(); // de los conectados
 
         // Creacion y control de puertos 
         Semaphore sem_puerto = new Semaphore(1); // Para la EM de puerto
-        int puerto = 1; // Puerto del server. A partir de ese se genera el resto.
+        MonitorLectorEscritor monitor_canales = new MonitorLectorEscritor(); // Para la EM de tablaCanales
+        Puerto puerto = new Puerto(1); // Puerto del server. A partir de ese se genera el resto.
         
 
         try {
@@ -69,7 +69,7 @@ public class Servidor {
             // Me quedo esperando a la peticion de inicio de sesion
             Socket si = ss.accept();
             // Asocio un hilo de ejecucion a cada usuario
-            (new Thread((new OC(si, tablaUsuarios, tablaFicheros, tablaCanales, puerto, sem_puerto)))).start();
+            (new Thread((new OC(si, tablaUsuarios, tablaFicheros, tablaCanales, puerto, sem_puerto,monitor_canales)))).start();
         }
     }
 }

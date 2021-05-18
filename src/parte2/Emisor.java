@@ -3,11 +3,9 @@ package parte2;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
 
 
 public class Emisor implements Runnable { // Funciona como el servidor de la entrega 1

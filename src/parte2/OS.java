@@ -39,11 +39,11 @@ public class OS implements Runnable {
                     case MSG_CONFIRM_LISTA_USUARIOS: 
                         // imprimir lista usuarios por standard output
                         Msg_confirm_lista_usuarios msg1 = (Msg_confirm_lista_usuarios) m;
-                        //List<Usuario> lista = msg1.getLista();
+                        List<String> lista = msg1.getLista();
                         // lock.takeLock(1);
                         System.out.println("PRUEBA : OS - sacar lista");
-                        //System.out.println(lista);
-                        msg1.sacarLista();
+                        System.out.println(lista);
+                        //msg1.sacarLista();
                         // lock.releaseLock(1);
                         break;
                     

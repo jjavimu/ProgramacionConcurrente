@@ -10,10 +10,10 @@ DUDAS PRACTICA
 - semaforos y locks los enviamos todo el rato
 - En receptor, el new Socket se hace mal la primera vez, el emisor se queda en el accept pero el receptor falla
     - puede ser porque falla el new socket, o porque el receptor intenta conectarse antes que el emisor cree el canal
-    - podriamos llevar un semáforo para que primero se cree el emisor y luego el receptor
+    - podriamos llevar un semáforo para que primero se cree el emisor y luego el receptor ??
+
 HOY
 -monitores
--ficheros
 
 
 

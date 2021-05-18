@@ -17,5 +17,5 @@ cd src/parte1
 javac -d bin/ *.java
 javac -d bin/ *.java Mensajes/*.java SinCon/*.java
 cd ../
-java -cp "parte2/bin" parte1.Servidor
+java -cp "parte2/bin" parte2.Servidor
 java -cp "parte2/bin" parte2.Cliente

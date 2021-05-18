@@ -46,4 +46,13 @@ public class MFicheros {
         tabla.get(nombre_fichero).add(nombre_receptor);
 	}
     
+    public synchronized List<String> getLista(){
+        List<String> devolver = new ArrayList<>();
+        for (Map.Entry<String, Set<String>> entry : tabla.entrySet()) {
+            for(String s: entry.getValue()){
+                devolver.add(s);
+            }
+        }
+        return devolver;
+    }
 }

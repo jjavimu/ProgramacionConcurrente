@@ -122,6 +122,7 @@ public class OC implements Runnable {
                         String nombre_rec = msg4.getNombreReceptor();
                         String nombre_e = msg4.getNombreEmisor();
                         String IPemisor = tablaUsuarios.getIP(nombre_e); //-----------------------------
+                        String file_name = msg4.getNombreFichero();
 
                         System.out.println("OC puerto del emisor: " + puerto_emisor);
                         System.out.println("OC nombre receptor: " + nombre_rec);
@@ -129,7 +130,7 @@ public class OC implements Runnable {
 
                         ObjectOutputStream fout_receptor = tablaCanales.getCanales(nombre_rec).getElement1();
 
-                        fout_receptor.writeObject(new Msg_preparado_sc(puerto_emisor,IPemisor)); 
+                        fout_receptor.writeObject(new Msg_preparado_sc(puerto_emisor,IPemisor, file_name)); 
                         fout_receptor.flush();
                         break;
                     default:

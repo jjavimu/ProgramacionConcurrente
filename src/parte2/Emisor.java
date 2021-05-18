@@ -4,6 +4,9 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 
 
@@ -12,18 +15,38 @@ public class Emisor implements Runnable { // Funciona como el servidor de la ent
     private int puerto;
 
     public Emisor(String nombre_fichero, int puerto) {
+        
         this.nombre_fichero = nombre_fichero;
         this.puerto = puerto;
     }
-
-
+    
+    public boolean enviarFichero(ObjectOutputStream fout) throws IOException {
+        // DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+        FileInputStream fis;
+        try {
+            fis = new FileInputStream("parte2/ClienteRecursos/" + nombre_fichero);
+            byte[] buffer = fis.readAllBytes();
+            fout.write(buffer);
+            fout.flush();
+            fis.close();
+            
+            return true;
+            
+        } catch (FileNotFoundException e) {
+            System.out.println("[Emisor]: El fichero pedido no existe");
+            return false;
+        }
+    }
+    
+    
     public void run() {
         try {
-
+            
             // Crear ServerSocket
             ServerSocket es = new ServerSocket(puerto);
-
+            
             // Me quedo esperando a la peticion del receptor
+            System.out.println("[Emisor]: ServerSocket creado y antes de accept");
             Socket si = es.accept();
 
             // Accedo flujo de salida del emisor
@@ -36,13 +59,19 @@ public class Emisor implements Runnable { // Funciona como el servidor de la ent
             
             // -----------------------------------------------------------
             System.out.println("Buscando...");
+            try {
+                if( enviarFichero(fout) != false)
+                    System.out.println("Se lo he mandado");
+            } catch (IOException e) {
+                System.out.println("Error en el envío del fichero");
+            }
+
             /*File fichero = new File("src/parte2/ClienteRecursos/" + this.nombre_fichero); // ruta
             byte[] contenido = Files.readAllBytes(fichero.toPath());
             
             // Escribir informacion por salida
             fout.write(contenido); // out es outputStream
             fout.flush();*/
-            System.out.println("Mensaje enviado");
             // ------------------------------------------------------------
 
             // Conexion finalizada
@@ -54,7 +83,7 @@ public class Emisor implements Runnable { // Funciona como el servidor de la ent
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("[Emisor]: Error");
+            System.out.println("[Emisor]: Error. Puerto: "+ puerto);
         }
 
     }

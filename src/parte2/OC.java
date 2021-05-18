@@ -103,6 +103,7 @@ public class OC implements Runnable {
                             int numero_puerto = puerto;
                             System.out.println("OC puerto :" + numero_puerto);
                             control_puerto.release();
+
                             System.out.println("OC nombre receptor :" + nombre_receptor);
                             System.out.println("OC nombre fichero :" + nombre_fichero);
                             

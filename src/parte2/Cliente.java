@@ -32,26 +32,24 @@ public class Cliente{
         // Creamos hilo oyente-servidor
         // Le enviamos el cerrojo necesario para la sincronizacion de la salida por pantalla
         Lock lock = new LockBakery(2); // 0-Cliente , 1-OS
-        Semaphore control_fout = new Semaphore(1);
-        (new Thread(new OS(sc,finc,foutc,lock,control_fout))).start();
+        (new Thread(new OS(sc,finc,foutc,lock))).start();
         
         // Enviar mensaje de conexion al servidor
-        control_fout.acquire();
+
         foutc.writeObject(new Msg_conexion(nombre_usuario));
         foutc.flush();
-        control_fout.release();
 
         // Booleano para cerrar conexion
         boolean ok = true;
 
         while (ok) {
 
-            lock.takeLock(0); 
+            //lock.takeLock(0); 
             System.out.println("Menu de acciones (elige un numero): ");
             System.out.println("1 - Consultar el nombre de los usuarios conectados y su informacion");
             System.out.println("2 - Descargar informacion");
             System.out.println("3 - Desconectarse del servidor");
-            lock.releaseLock(0);
+            //lock.releaseLock(0);
 
             int opcion = teclado.nextInt();     
             String sucio = teclado.nextLine();
@@ -59,39 +57,33 @@ public class Cliente{
             switch (opcion) {
                 case 1:
                     // Enviar mensaje MSG_LISTA_USUARIOS
-                    control_fout.acquire();
                     foutc.writeObject(new Msg_lista_usuarios());
                     foutc.flush();
-                    control_fout.release();
-                    lock.takeLock(0); 
+                    //lock.takeLock(0); 
                     System.out.println("PRUEBA : Cliente - lista");
-                    lock.releaseLock(0);
+                    //lock.releaseLock(0);
                     break;
                 case 2:
                     // (se deben permitir otras acciones y descargas simultaneas)
                     // Enviar mensaje MSG_SOLICITUD_FICHERO
-                    lock.takeLock(0); 
+                    //lock.takeLock(0); 
                     System.out.println("Indica el nombre del fichero que quieres descargar: ");
                     String nombre_fichero = teclado.nextLine();
-                    lock.releaseLock(0);
+                    //lock.releaseLock(0);
 
-                    control_fout.acquire();
                     foutc.writeObject(new Msg_solicitud_fichero(nombre_fichero,nombre_usuario));
                     foutc.flush();
-                    control_fout.release();
                     break;
                 case 3:
                     // Enviar mensaje MSG_CERRAR_CONEXION
-                    control_fout.acquire();
                     foutc.writeObject(new Msg_cerrar_conexion(nombre_usuario));
                     foutc.flush();
-                    control_fout.release();
                     ok = false; //Cerramos este hilo y el hilo OS se queda esperando confirmación   
                     break;
                 default:
-                    lock.takeLock(0); 
+                    //lock.takeLock(0); 
                     System.out.println("Opcion no valida");
-                    lock.releaseLock(0);
+                    //lock.releaseLock(0);
                     break;
             }
         }

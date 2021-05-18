@@ -9,6 +9,10 @@ DUDAS PRACTICA
 - puertos e IP
 - semaforos y locks los enviamos todo el rato
 
+HOY
+-monitores
+-ficheros
+
 
 
 

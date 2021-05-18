@@ -9,10 +9,13 @@ public class Msg_confirm_lista_usuarios extends Mensaje{
     public Msg_confirm_lista_usuarios(List<Usuario> usuarios){
         super(TipoMensaje.MSG_CONFIRM_LISTA_USUARIOS);  
         this.usuarios = usuarios;
-        System.out.println(usuarios);
     }
 
     public List<Usuario> getLista(){
         return this.usuarios;
+    }
+
+    public void sacarLista(){
+        System.out.println(usuarios);
     }
 }

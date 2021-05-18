@@ -55,6 +55,7 @@ public class Servidor {
                 }
                
             }
+            System.out.println(tablaUsuarios.getTabla());
         } catch (FileNotFoundException e) {
             System.out.println("Fichero users.txt no encontrado");
             System.exit(1);

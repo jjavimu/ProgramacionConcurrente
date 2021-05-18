@@ -1,8 +1,9 @@
 package parte2;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Usuario { // Representa un usuario registrado en el sistema
+public class Usuario implements Serializable { // Representa un usuario registrado en el sistema
 
     // Identificador del usuario
     private String nombre;
@@ -56,10 +57,11 @@ public class Usuario { // Representa un usuario registrado en el sistema
 
     public String toString(){  
         String imprime_nombre = "Usuario: " + this.nombre + "\n" ;
+        String imprime_conexion = "Conectado: " + this.conectado + "\n";
         String imprime_ip = "Direccion IP: " + this.dirIP + "\n" ;
         String imprime_fich = "Ficheros : " + this.ficheros + "\n" ;
         
-        return imprime_nombre + imprime_ip + imprime_fich;
+        return imprime_nombre + imprime_conexion + imprime_ip + imprime_fich;
     }
     
 }

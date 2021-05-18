@@ -55,6 +55,7 @@ public class OC implements Runnable {
                             // Ya hay un usuario que ha iniciado sesion con este nombre
                             System.out.println("OC : El cliente no puede conectarse porque ya hay uno conectado");
                         } else {
+                            System.out.println(tablaUsuarios.getTabla());
                             tablaCanales.setCanales(nombre, fin, fout);
                             List<String> ficheros = tablaUsuarios.getFicheros(nombre);
                             tablaFicheros.setFicheros(ficheros, nombre);
@@ -66,6 +67,11 @@ public class OC implements Runnable {
                     case MSG_LISTA_USUARIOS:
                         // crear un mensaje con la informacion de usuarios en sistema
                         List<Usuario> usuarios = tablaUsuarios.getListaUsuariosConectados();
+                       
+                        System.out.println("PRUEBA : OC - Lista");
+                    
+                        System.out.println(usuarios);
+                    
                         // envio mensaje confirmacion lista usuarios fout
                         fout.writeObject(new Msg_confirm_lista_usuarios(usuarios));
                         fout.flush();
@@ -76,7 +82,7 @@ public class OC implements Runnable {
                         tablaUsuarios.desconectar(msg2.getNombreUsuario());
                         tablaCanales.desconectar(msg2.getNombreUsuario());
                         tablaFicheros.desconectar(msg2.getNombreUsuario());
-                        // envio mensaje confirmacion cerrar conexion fout
+                        // envio mensaje confirmacion cerrar conexion fout               
                         fout.writeObject(new Msg_confirm_cerrar_conexion());
                         fout.flush();
                         ok = false; // Para salir del while
@@ -93,11 +99,14 @@ public class OC implements Runnable {
                             ObjectOutputStream fout_emisor = tablaCanales.getCanales(nombre_emisor).getElement1();
                 
                             control_puerto.acquire();
-                            int numero_puerto = puerto;
                             puerto = puerto + 1;
+                            int numero_puerto = puerto;
+                            System.out.println("OC puerto :" + numero_puerto);
                             control_puerto.release();
+                            System.out.println("OC nombre receptor :" + nombre_receptor);
+                            System.out.println("OC nombre fichero :" + nombre_fichero);
                             
-                            fout_emisor.writeObject(new Msg_emitir_fichero(msg3.getNombreFichero(), nombre_receptor,numero_puerto)); // puerto
+                            fout_emisor.writeObject(new Msg_emitir_fichero(nombre_fichero, nombre_emisor, nombre_receptor,numero_puerto)); // puerto
                             fout_emisor.flush();
                              // actualizar tabla ficheros suponiendo que emisor-receptor funcion bien ------------------
                             tablaFicheros.actualizar(nombre_receptor, nombre_fichero);
@@ -109,16 +118,21 @@ public class OC implements Runnable {
                         // envio fout1 mensaje MENSAJE_PREPARADO_SERVIDORCLIENTE
                         Msg_preparado_cs msg4 = (Msg_preparado_cs) m;
                         int puerto_emisor = msg4.getPuerto();
-                        String nombre_usuario = msg4.getNombreUsuario();
-                        String IPemisor = tablaUsuarios.getIP(nombre_usuario);
+                        String nombre_rec = msg4.getNombreReceptor();
+                        String nombre_e = msg4.getNombreEmisor();
+                        String IPemisor = tablaUsuarios.getIP(nombre_e); //-----------------------------
 
-                        ObjectOutputStream fout_receptor = tablaCanales.getCanales(nombre_usuario).getElement1();
+                        System.out.println("OC puerto del emisor: " + puerto_emisor);
+                        System.out.println("OC nombre receptor: " + nombre_rec);
+                        System.out.println("OC IP emisor: " + IPemisor);
+
+                        ObjectOutputStream fout_receptor = tablaCanales.getCanales(nombre_rec).getElement1();
 
                         fout_receptor.writeObject(new Msg_preparado_sc(puerto_emisor,IPemisor)); 
                         fout_receptor.flush();
                         break;
                     default:
-                        System.out.print("Mensaje no valido");
+                        System.out.println("Mensaje no valido");
                         break;
                 }
 
@@ -129,7 +143,7 @@ public class OC implements Runnable {
             fin.close();
             si.close();
         } catch (Exception e) {
-            System.out.print("Error OC");
+            System.out.println("Error OC");
         }
     }
 }

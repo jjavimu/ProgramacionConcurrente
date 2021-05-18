@@ -21,7 +21,7 @@ public class Cliente{
 
         // Preguntar el nombre del usuario
         Scanner teclado = new Scanner(System.in);
-        System.out.print("Introduce el nombre de usuario: ");
+        System.out.println("Introduce el nombre de usuario: ");
         String nombre_usuario = teclado.nextLine();
 
         // Creamos socket con el servidor
@@ -34,8 +34,6 @@ public class Cliente{
         Lock lock = new LockBakery(2); // 0-Cliente , 1-OS
         Semaphore control_fout = new Semaphore(1);
         (new Thread(new OS(sc,finc,foutc,lock,control_fout))).start();
-        
-        System.out.println("hola");
         
         // Enviar mensaje de conexion al servidor
         control_fout.acquire();
@@ -55,7 +53,8 @@ public class Cliente{
             System.out.println("3 - Desconectarse del servidor");
             lock.releaseLock(0);
 
-            int opcion = teclado.nextInt();
+            int opcion = teclado.nextInt();     
+            String sucio = teclado.nextLine();
 
             switch (opcion) {
                 case 1:
@@ -64,15 +63,18 @@ public class Cliente{
                     foutc.writeObject(new Msg_lista_usuarios());
                     foutc.flush();
                     control_fout.release();
+                    lock.takeLock(0); 
+                    System.out.println("PRUEBA : Cliente - lista");
+                    lock.releaseLock(0);
                     break;
                 case 2:
                     // (se deben permitir otras acciones y descargas simultaneas)
                     // Enviar mensaje MSG_SOLICITUD_FICHERO
                     lock.takeLock(0); 
-                    System.out.print("Indica el nombre del fichero que quieres descargar: ");
+                    System.out.println("Indica el nombre del fichero que quieres descargar: ");
                     String nombre_fichero = teclado.nextLine();
                     lock.releaseLock(0);
-                    
+
                     control_fout.acquire();
                     foutc.writeObject(new Msg_solicitud_fichero(nombre_fichero,nombre_usuario));
                     foutc.flush();
@@ -88,7 +90,7 @@ public class Cliente{
                     break;
                 default:
                     lock.takeLock(0); 
-                    System.out.print("Opcion no valida");
+                    System.out.println("Opcion no valida");
                     lock.releaseLock(0);
                     break;
             }

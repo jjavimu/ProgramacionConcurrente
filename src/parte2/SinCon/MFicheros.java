@@ -35,14 +35,14 @@ public class MFicheros {
         }
     }
 
-    public void desconectar(String nombre_usuario) { // TENER UN SET PARA ELIMINAR
+    public synchronized void desconectar(String nombre_usuario) { // TENER UN SET PARA ELIMINAR
         for (Map.Entry<String, Set<String>> entry : tabla.entrySet()) {
             // System.out.println("clave=" + entry.getKey() + ", valor=" + entry.getValue());
             entry.getValue().remove(nombre_usuario); // no estoy seguro de si compara bien pero creo que si
         }
     }
 
-	public void actualizar(String nombre_receptor, String nombre_fichero) {
+	public synchronized void actualizar(String nombre_receptor, String nombre_fichero) {
         tabla.get(nombre_fichero).add(nombre_receptor);
 	}
     

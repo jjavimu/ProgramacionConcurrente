@@ -20,7 +20,7 @@ public class MCanales {
         return tabla.get(nombre_usuario);
     }
 
-    public void desconectar(String nombre_usuario) {
+    public synchronized void desconectar(String nombre_usuario) {
         tabla.remove(nombre_usuario);
     }
 }

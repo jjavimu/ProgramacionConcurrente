@@ -35,14 +35,14 @@ public class Emisor implements Runnable { // Funciona como el servidor de la ent
             
             
             // -----------------------------------------------------------
-            System.out.print("Buscando...");
-            File fichero = new File("src/parte2/ClienteRecursos/" + this.nombre_fichero); // ruta
+            System.out.println("Buscando...");
+            /*File fichero = new File("src/parte2/ClienteRecursos/" + this.nombre_fichero); // ruta
             byte[] contenido = Files.readAllBytes(fichero.toPath());
             
             // Escribir informacion por salida
             fout.write(contenido); // out es outputStream
-            fout.flush();
-            System.out.print("Mensaje enviado");
+            fout.flush();*/
+            System.out.println("Mensaje enviado");
             // ------------------------------------------------------------
 
             // Conexion finalizada

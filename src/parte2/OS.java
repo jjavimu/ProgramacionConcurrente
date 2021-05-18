@@ -3,6 +3,7 @@ package parte2;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import parte2.Mensajes.*;
@@ -42,22 +43,31 @@ public class OS implements Runnable {
                     case MSG_CONFIRM_LISTA_USUARIOS:
                         // imprimir lista usuarios por standard output
                         Msg_confirm_lista_usuarios msg1 = (Msg_confirm_lista_usuarios) m;
+                        List<Usuario> lista = msg1.getLista();
                         lock.takeLock(1);
-                        System.out.println(msg1.getLista());
+                        System.out.println("PRUEBA : OS - sacar lista");
+                        System.out.println(lista);
                         lock.releaseLock(1);
                         break;
                     case MSG_EMITIR_FICHERO:
                         // El servidor me avisa de que otro cliente quiere un fichero que yo tengo
                         Msg_emitir_fichero msg2 = (Msg_emitir_fichero) m;
                         String nombre_fichero = msg2.getFichero();
-                        String nombre_receptor = msg2.getNombreUsuario();
+                        String nombre_receptor = msg2.getNombreReceptor();
+                        String nombre_emisor = msg2.getNombreEmisor();
                         int puerto = msg2.getPuerto();
 
                         // enviar MENSAJE_PREPARADO_CLIENTESERVIDOR a mi oyente
                         control_fout.acquire();
-                        foutc.writeObject(new Msg_preparado_cs(nombre_receptor,puerto));
+                        foutc.writeObject(new Msg_preparado_cs(nombre_emisor,nombre_receptor,puerto));
                         foutc.flush();
                         control_fout.release();
+                        lock.takeLock(1);
+                        System.out.println("Emitir fichero :");
+                        System.out.println("OS puerto :" + puerto);
+                        System.out.println("OS nombre receptor :" + nombre_receptor);
+                        System.out.println("OS nombre fichero :" + nombre_fichero);
+                        lock.releaseLock(1);
                         // Crear proceso EMISOR y espero en accept la conexion
                         new Thread((new Emisor(nombre_fichero,puerto))).start();
                         break;
@@ -81,7 +91,7 @@ public class OS implements Runnable {
                         break;
                     default:
                         lock.takeLock(1);
-                        System.out.print("Mensaje no valido");
+                        System.out.println("Mensaje no valido");
                         lock.releaseLock(1);
                         break;
                 }
@@ -93,7 +103,7 @@ public class OS implements Runnable {
             sc.close();
 
         } catch (Exception e) {
-            System.out.print("Error OS");
+            System.out.println("Error OS");
         }
     }
 

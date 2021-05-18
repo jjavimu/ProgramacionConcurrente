@@ -15,7 +15,7 @@ public class MUsuarios {
     public MUsuarios(){}
 
     // Dado un usuario, si no existe lo mete en la tabla
-    // si existe y no esta conectado devuelve cierto
+    // si existe y no esta conectado devuelve cierto y lo conecta
     // si existe y esta conectado devuelve falso
     public synchronized boolean conectarUsuario(String nombre_usuario){
         boolean ok = true;
@@ -27,6 +27,8 @@ public class MUsuarios {
 
          else if(usuario_info.getConectado()) {
              ok = false;
+         } else{
+             usuario_info.setConectado(true);
          }
         return ok;
     }
@@ -59,12 +61,22 @@ public class MUsuarios {
         return tabla.get(nombre).getDirIP();
     }
 
-	public void actualizar(String nombre_receptor, String nombre_fichero) {
+	public synchronized void actualizar(String nombre_receptor, String nombre_fichero) {
         tabla.get(nombre_receptor).addFichero(nombre_fichero);
 	}
 
-    public void add(Usuario nuevo_usuario) {
+    public synchronized void add(Usuario nuevo_usuario) {
         tabla.put(nuevo_usuario.getNombre(),nuevo_usuario);
+    }
+
+    public synchronized List<Usuario>getTabla(){
+        List<Usuario> usuarios= new ArrayList<>();
+        // Recorremos el hashmap buscando los conectados
+       for (Map.Entry<String, Usuario> entry : tabla.entrySet()) {
+            // System.out.println("clave=" + entry.getKey() + ", valor=" + entry.getValue());
+            usuarios.add(entry.getValue());
+       }
+       return usuarios;
     }
     
 }

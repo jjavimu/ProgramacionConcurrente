@@ -7,8 +7,9 @@ public class Msg_confirm_lista_usuarios extends Mensaje{
     private List<Usuario> usuarios;
 
     public Msg_confirm_lista_usuarios(List<Usuario> usuarios){
-        super(TipoMensaje.MSG_LISTA_USUARIOS);  
+        super(TipoMensaje.MSG_CONFIRM_LISTA_USUARIOS);  
         this.usuarios = usuarios;
+        System.out.println(usuarios);
     }
 
     public List<Usuario> getLista(){

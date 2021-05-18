@@ -36,7 +36,7 @@ public class OS implements Runnable {
                         System.out.println("OS: Conexion establecida");
                         // lock.releaseLock(1);
                         break;
-                    case MSG_CONFIRM_LISTA_USUARIOS:
+                    case MSG_CONFIRM_LISTA_USUARIOS: 
                         // imprimir lista usuarios por standard output
                         Msg_confirm_lista_usuarios msg1 = (Msg_confirm_lista_usuarios) m;
                         List<Usuario> lista = msg1.getLista();
@@ -45,6 +45,7 @@ public class OS implements Runnable {
                         System.out.println(lista);
                         // lock.releaseLock(1);
                         break;
+                    
                     case MSG_EMITIR_FICHERO:
                         // El servidor me avisa de que otro cliente quiere un fichero que yo tengo
                         Msg_emitir_fichero msg2 = (Msg_emitir_fichero) m;
@@ -54,7 +55,7 @@ public class OS implements Runnable {
                         int puerto = msg2.getPuerto();
 
                         // enviar MENSAJE_PREPARADO_CLIENTESERVIDOR a mi oyente
-                        foutc.writeObject(new Msg_preparado_cs(nombre_emisor,nombre_receptor,puerto));
+                        foutc.writeObject(new Msg_preparado_cs(nombre_emisor,nombre_receptor,puerto, nombre_fichero));
                         foutc.flush();
                         // lock.takeLock(1);
                         System.out.println("Emitir fichero :");
@@ -72,9 +73,10 @@ public class OS implements Runnable {
                         Msg_preparado_sc msg3 = (Msg_preparado_sc) m;
                         int puerto_emisor = msg3.getPuerto();
                         String IPemisor = msg3.getIP();
+                        String file_name= msg3.getNombreFichero();
 
                         // Crear proceso RECEPTOR
-                        (new Thread((new Receptor(puerto_emisor,IPemisor)))).start();
+                        (new Thread((new Receptor(puerto_emisor,IPemisor, file_name)))).start();
                         break;
                     case MSG_CONFIRM_CERRAR_CONEXION:
                         // imprimir adios por standard output

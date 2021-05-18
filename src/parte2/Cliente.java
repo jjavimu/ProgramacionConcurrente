@@ -14,8 +14,6 @@ public class Cliente{
     // Dir ip de la maquina
     // Socket y flujos con el servidor
 
-
-
     public static void main(String[] args) throws Exception { // main : interactuar con el usuario
         String IP = "localhost"; // IP del servidor  
 

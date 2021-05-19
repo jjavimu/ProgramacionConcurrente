@@ -1,17 +1,18 @@
 package parte2.Mensajes;
 
+import java.util.HashMap;
 import java.util.List;
 import parte2.Usuario;
 
 public class Msg_confirm_lista_usuarios extends Mensaje{
-    private List<String> usuarios;
+    private HashMap<String, List<String>> usuarios;
 
-    public Msg_confirm_lista_usuarios(List<String> usuarios){
+    public Msg_confirm_lista_usuarios(HashMap<String, List<String>> usuarios){
         super(TipoMensaje.MSG_CONFIRM_LISTA_USUARIOS);  
         this.usuarios = usuarios;
     }
 
-    public List<String> getLista(){
+    public HashMap<String, List<String>> getLista(){
         return this.usuarios;
     }
 

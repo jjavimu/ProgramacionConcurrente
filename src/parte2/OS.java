@@ -3,7 +3,10 @@ package parte2;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import parte2.Mensajes.*;
 import parte2.SinCon.*;
@@ -33,16 +36,22 @@ public class OS implements Runnable {
                     case MSG_CONFIRM_CONEXION:
                         // imprimir conexion establecida por standard output
                         // lock.takeLock(1);
-                        System.out.println("OS: Conexion establecida");
+                        System.out.println("[OS]: Conexion establecida");
                         // lock.releaseLock(1);
                         break;
                     case MSG_CONFIRM_LISTA_USUARIOS: 
                         // imprimir lista usuarios por standard output
                         Msg_confirm_lista_usuarios msg1 = (Msg_confirm_lista_usuarios) m;
-                        List<String> lista = msg1.getLista();
+                        HashMap<String, List<String>> lista = msg1.getLista();
                         // lock.takeLock(1);
-                        System.out.println("PRUEBA : OS - sacar lista");
-                        System.out.println(lista);
+                        System.out.println("[OS]: Mostrando lista de usuarios y sus ficheros");
+                        for (Entry<String, List<String>> entry : lista.entrySet()) {
+                            System.out.println("Usuario: " + entry.getKey());
+                            System.out.println("Ficheros disponibles: " + entry.getValue());  
+                       }
+                        /*for (Usuario u : lista) {
+                            System.out.println(u);
+                        }*/
                         //msg1.sacarLista();
                         // lock.releaseLock(1);
                         break;
@@ -59,10 +68,12 @@ public class OS implements Runnable {
                         foutc.writeObject(new Msg_preparado_cs(nombre_emisor,nombre_receptor,puerto, nombre_fichero));
                         foutc.flush();
                         // lock.takeLock(1);
-                        System.out.println("Emitir fichero :");
-                        System.out.println("OS puerto :" + puerto);
-                        System.out.println("OS nombre receptor :" + nombre_receptor);
-                        System.out.println("OS nombre fichero :" + nombre_fichero);
+                        System.out.println("--------------------------------");
+                        System.out.println("[OS] Emitir fichero :");
+                        System.out.println("[OS] puerto :" + puerto);
+                        System.out.println("[OS] nombre receptor :" + nombre_receptor);
+                        System.out.println("[OS] nombre fichero :" + nombre_fichero);
+                        System.out.println("--------------------------------");
                         // lock.releaseLock(1);
                         // Crear proceso EMISOR y espero en accept la conexion
                         new Thread((new Emisor(nombre_fichero,puerto))).start();
@@ -82,13 +93,13 @@ public class OS implements Runnable {
                     case MSG_CONFIRM_CERRAR_CONEXION:
                         // imprimir adios por standard output
                         // lock.takeLock(1);
-                        System.out.println("OS: Conexion cerrada. Adios :)");
+                        System.out.println("[OS]: Conexion cerrada. Adios :)");
                         // lock.releaseLock(1);
                         ok = false;
                         break;
                     default:
                         // lock.takeLock(1);
-                        System.out.println("Mensaje no valido");
+                        System.out.println("[OS]: Mensaje no valido");
                         // lock.releaseLock(1);
                         break;
                 }
@@ -99,7 +110,7 @@ public class OS implements Runnable {
             sc.close();
 
         } catch (Exception e) {
-            System.out.println("Error OS");
+            System.out.println("[OS]: Error en OS");
         }
     }
 

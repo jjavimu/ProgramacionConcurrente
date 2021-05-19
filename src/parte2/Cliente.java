@@ -22,6 +22,14 @@ public class Cliente{
         System.out.println("Introduce el nombre de usuario: ");
         String nombre_usuario = teclado.nextLine();
 
+        // Aquí podríamos ver qué ficheros tiene en su carpeta
+        /* 
+        File directoryPath = new File("parte2/ClienteRecursos/");
+        //List of all files and directories
+        List<String> contents = new ArrayList<String>(directoryPath.list());
+        // Pasarle en msg_conexion contentss
+        */
+
         // Creamos socket con el servidor
         Socket sc = new Socket(IP, 1); // Puerto -------------------------------------------
         ObjectOutputStream foutc = new ObjectOutputStream(sc.getOutputStream());
@@ -40,6 +48,14 @@ public class Cliente{
         // Booleano para cerrar conexion
         boolean ok = true;
 
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				new Menu(finc, foutc, nombre_usuario);
+
+			}
+		});
+        
+        /*
         while (ok) {
 
             //lock.takeLock(0); 
@@ -84,7 +100,7 @@ public class Cliente{
                     //lock.releaseLock(0);
                     break;
             }
-        }
+        }*/
         teclado.close();
     }
 }

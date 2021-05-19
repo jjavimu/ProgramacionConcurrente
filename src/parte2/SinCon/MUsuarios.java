@@ -1,6 +1,7 @@
 package parte2.SinCon;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,7 @@ public class MUsuarios {
         return tabla.get(nombre_usuario).getConectado();
     }
 
-    public synchronized List<Usuario> getListaUsuariosConectados(){
+    /*public synchronized List<Usuario> getListaUsuariosConectados(){
         List<Usuario> conectados = new ArrayList<>();
         // Recorremos el hashmap buscando los conectados
        for (Map.Entry<String, Usuario> entry : tabla.entrySet()) {
@@ -46,8 +47,8 @@ public class MUsuarios {
                 conectados.add(entry.getValue());
             }
        }
-       return conectados;
-    }
+       return Collections.unmodifiableList(conectados);
+    }*/
 
     public synchronized void desconectar(String nombre){
         tabla.get(nombre).setConectado(false);
@@ -76,7 +77,24 @@ public class MUsuarios {
             // System.out.println("clave=" + entry.getKey() + ", valor=" + entry.getValue());
             usuarios.add(entry.getValue());
        }
+       return Collections.unmodifiableList(usuarios);
+    }
+
+    public synchronized HashMap<String, List<String>> getLista(boolean todos){
+        HashMap<String, List<String>>  usuarios = new HashMap<>();
+        // Recorremos el hashmap buscando los conectados
+       for (Map.Entry<String, Usuario> entry : tabla.entrySet()) {
+            List<String> ficheros = new ArrayList<>();
+            if(entry.getValue().getConectado() || todos){ // Si esta conectado o me han dihcho que todos
+                for(String s : entry.getValue().getFicheros()){
+                    ficheros.add(s);
+                }
+                usuarios.put(entry.getKey(), ficheros);
+            }
+       }
+
        return usuarios;
     }
+
     
 }

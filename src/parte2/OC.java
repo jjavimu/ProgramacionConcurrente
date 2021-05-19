@@ -4,6 +4,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import parte2.Mensajes.*;
@@ -42,7 +43,7 @@ public class OC implements Runnable {
 
             // Booleano para cerrar conexion con el cliente cuando se desconecta
             boolean ok = true;
-
+            
             while (ok) {
 
                 // Leo flujo de entrada y hago las acciones oportunas
@@ -58,7 +59,7 @@ public class OC implements Runnable {
                             // Ya hay un usuario que ha iniciado sesion con este nombre
                             System.out.println("[OC] : El cliente no puede conectarse porque ya hay uno conectado");
                         } else {
-                            System.out.println(tablaUsuarios.getTabla());
+                            // System.out.println(tablaUsuarios.getTabla());
 
                             monitor_canales.request_write();
                             tablaCanales.setCanales(nombre, fin, fout);
@@ -76,19 +77,23 @@ public class OC implements Runnable {
                     }
                     case MSG_LISTA_USUARIOS: {
                         // crear un mensaje con la informacion de usuarios en sistema
-                        List<Usuario> usuarios = new ArrayList<Usuario>(tablaUsuarios.getListaUsuariosConectados());
+                        //List<Usuario> usuarios = tablaUsuarios.getListaUsuariosConectados();
 
-                        List<Usuario> enviar = new ArrayList<>();
+                        /*List<Usuario> enviar = new ArrayList<>();
                         for(Usuario u : usuarios){
                             enviar.add(new Usuario(u.getNombre(), u.getDirIP(), u.getConectado(), u.getFicheros()));
-                        }
+                        }*/
                        
-                        System.out.println("PRUEBA : OC - Lista");
+                        /*System.out.println("PRUEBA : OC - Lista");
                         List<String> lista_ficheros = tablaFicheros.getLista();
                         System.out.println(lista_ficheros);
+
+                        System.out.println("PRUEBA : OC - Lista de string en vez de usuarios");*/
+                        HashMap<String, List<String>> n_u = tablaUsuarios.getLista(false); // false = solo conectados
+                        //System.out.println(n_u);
                     
                         // envio mensaje confirmacion lista usuarios fout
-                        fout.writeObject(new Msg_confirm_lista_usuarios(lista_ficheros));
+                        fout.writeObject(new Msg_confirm_lista_usuarios(n_u));
                         fout.flush();
                         break;
                     }
@@ -120,7 +125,7 @@ public class OC implements Runnable {
                         String nombre_receptor = msg3.getNombreUsuario();
                         
                         if (nombre_emisor == null) {
-                            System.out.println("[OC]: El fichero " + nombre_fichero +" no lo tiene nadie conectado");
+                            System.out.println("[OC]: El fichero " + nombre_fichero + " no lo tiene nadie conectado");
                         } else {
                             monitor_canales.request_read();
                             ObjectOutputStream fout_emisor = tablaCanales.getCanales(nombre_emisor).getElement1();
@@ -129,11 +134,14 @@ public class OC implements Runnable {
                             control_puerto.acquire();
                             puerto.actualiza();
                             int numero_puerto = puerto.getPuerto();
-                            System.out.println("OC puerto :" + numero_puerto);
                             control_puerto.release();
+                            
+                            System.out.println("--------------------------------");
+                            System.out.println("[OC] puerto :" + numero_puerto);
+                            System.out.println("[OC] nombre receptor :" + nombre_receptor);
+                            System.out.println("[OC] nombre fichero :" + nombre_fichero);
+                            System.out.println("--------------------------------");
 
-                            System.out.println("OC nombre receptor :" + nombre_receptor);
-                            System.out.println("OC nombre fichero :" + nombre_fichero);
                             
                             fout_emisor.writeObject(new Msg_emitir_fichero(nombre_fichero, nombre_emisor, nombre_receptor,numero_puerto)); // puerto
                             fout_emisor.flush();
@@ -155,21 +163,22 @@ public class OC implements Runnable {
                         
                         String IPemisor = tablaUsuarios.getIP(nombre_e); //-----------------------------
                         
-
-                        System.out.println("OC puerto del emisor: " + puerto_emisor);
-                        System.out.println("OC nombre receptor: " + nombre_rec);
-                        System.out.println("OC IP emisor: " + IPemisor);
+                        System.out.println("--------------------------------");
+                        System.out.println("[OC]: puerto del emisor: " + puerto_emisor);
+                        System.out.println("[OC]: nombre receptor: " + nombre_rec);
+                        System.out.println("[OC]: IP emisor: " + IPemisor);
+                        System.out.println("--------------------------------");
                         
                         monitor_canales.request_read();
                         ObjectOutputStream fout_receptor = tablaCanales.getCanales(nombre_rec).getElement1();
                         monitor_canales.release_read();
 
-                        fout_receptor.writeObject(new Msg_preparado_sc(puerto_emisor,IPemisor, file_name)); 
+                        fout_receptor.writeObject(new Msg_preparado_sc(puerto_emisor, IPemisor, file_name)); 
                         fout_receptor.flush();
                         break;
                     }
                     default:
-                        System.out.println("Mensaje no valido");
+                        System.out.println("[OC]: Mensaje no valido");
                         break;
                 }
 
@@ -181,7 +190,7 @@ public class OC implements Runnable {
             si.close();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error OC");
+            System.out.println("[OC]: Error OC");
         }
     }
 }

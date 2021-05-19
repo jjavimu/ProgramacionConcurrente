@@ -40,7 +40,7 @@ public class Usuario implements Serializable { // Representa un usuario registra
     }
 
     public List<String> getFicheros() {
-        return this.ficheros;
+        return  Collections.unmodifiableList(ficheros);
     }
 
     public void addFichero(String nombre_fichero){

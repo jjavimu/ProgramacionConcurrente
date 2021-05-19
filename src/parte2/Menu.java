@@ -62,7 +62,7 @@ public class Menu extends JFrame {
 						System.out.println("Ha seleccionado: lista de usuarios");
 						// Enviar mensaje MSG_LISTA_USUARIOS
 						try {
-							foutc.writeObject(new Msg_lista_usuarios());
+							foutc.writeObject(new Msg_lista_usuarios(nombre_usuario, "Servidor"));
 							foutc.flush();
 						} catch (IOException e3) {
 							// TODO Auto-generated catch block
@@ -84,7 +84,7 @@ public class Menu extends JFrame {
 						// lock.releaseLock(0);
 
 						try {
-							foutc.writeObject(new Msg_solicitud_fichero(path,nombre_usuario));
+							foutc.writeObject(new Msg_solicitud_fichero(path,nombre_usuario,"Servidor"));
 							foutc.flush();
 						} catch (IOException e2) {
 							// TODO Auto-generated catch block
@@ -95,7 +95,7 @@ public class Menu extends JFrame {
 						System.out.println("Ha seleccionado: salir");
 						// Enviar mensaje MSG_CERRAR_CONEXION
 						try {
-							foutc.writeObject(new Msg_cerrar_conexion(nombre_usuario));
+							foutc.writeObject(new Msg_cerrar_conexion(nombre_usuario,"Servidor"));
 							foutc.flush();
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
@@ -120,7 +120,7 @@ public class Menu extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// Enviar mensaje MSG_CERRAR_CONEXION
 				try {
-					foutc.writeObject(new Msg_cerrar_conexion(nombre_usuario));
+					foutc.writeObject(new Msg_cerrar_conexion(nombre_usuario,"Servidor"));
 					foutc.flush();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block

@@ -11,8 +11,10 @@ public class Mensaje implements Serializable{
     private String destino; 
 
 
-    public Mensaje(TipoMensaje tipo){
+    public Mensaje(TipoMensaje tipo, String nombre_origen, String nombre_destino){
         this.tipo_mensaje = tipo;
+        this.origen = nombre_origen;
+        this.destino = nombre_destino;
     }
 
     public TipoMensaje getTipo(){

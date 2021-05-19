@@ -1,29 +1,11 @@
 
 DUDAS PRACTICA
-- Atributos: como el main es static los atributos tambien tienen que serlo. No tiene sentido, no? - Cliente, Servidor
-- por que necesito que Mensaje sea clase abstracta? no puedo tenerlo como una clase normal?
-- origen y destino que es? en mensaje (ip?)
-- cuando actualizo exactamente en el servidor la tabla?
-- contador de puertos no entendi tu explicacion
-- fout de nuevo duda
-- puertos e IP
-- semaforos y locks los enviamos todo el rato
-- En receptor, el new Socket se hace mal la primera vez, el emisor se queda en el accept pero el receptor falla
-    - puede ser porque falla el new socket, o porque el receptor intenta conectarse antes que el emisor cree el canal
-    - podriamos llevar un semáforo para que primero se cree el emisor y luego el receptor ??
-
-HOY
--monitores
-
+- IP
+- monitores readers/writers arreglar
 
 
 
 COSAS QUE HAY QUE HACER
 - FICHEROS: Emisor/Receptor + Servidor (Actualizar fichero al salirse el servidor)
-- Organizar los puertos de los distintos sitios
 - Probar la entrega 1 en distintos ordenadores (IP). ORGANIZAR LAS IP.
-- MonitorFicheros: algo mas elaborado para ver que usuario le da el fichero
-- Escritura - exclusion mutua, lectura no (readers and writers) -- monitores/tablas
-- CONTROL DE FALLOS EN LOS MENSAJES: los dos del OC (los dos system.out) -- controlar EM si voy a dejarlo
-- Lo de las IP
 - QUE LAS DESCARGAS Y LOS RECURSOS ESTÉN EN UNA MISMA CARPETA

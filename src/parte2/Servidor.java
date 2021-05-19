@@ -27,7 +27,7 @@ public class Servidor {
         // Creacion y control de puertos 
         Semaphore sem_puerto = new Semaphore(1); // Para la EM de puerto
         MonitorLectorEscritor monitor_canales = new MonitorLectorEscritor(); // Para la EM de tablaCanales
-        Puerto puerto = new Puerto(1); // Puerto del server. A partir de ese se genera el resto.
+        
         
 
         try {
@@ -67,7 +67,9 @@ public class Servidor {
         }
 
         // Crear ServerSocket
-        ServerSocket ss = new ServerSocket(1);
+        Puerto puerto = new Puerto(500); // Puerto del server. A partir de ese se genera el resto.
+        ServerSocket ss = new ServerSocket(puerto.getPuerto());
+        
         // serversocket.getLocalPort
 
         while (true) {

@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Usuario implements Serializable { // Representa un usuario registrado en el sistema
 
-    // Identificador del usuario
+    // Identificador del usuario (es unico)
     private String nombre;
     // Direccion ip
     private String dirIP;
@@ -27,16 +27,8 @@ public class Usuario implements Serializable { // Representa un usuario registra
         return this.nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
     public String getDirIP() {
         return this.dirIP;
-    }
-
-    public void setDirIP(String dirIP) {
-        this.dirIP = dirIP;
     }
 
     public List<String> getFicheros() {

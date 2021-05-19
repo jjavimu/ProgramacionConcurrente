@@ -5,19 +5,18 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import parte2.Mensajes.*;
-import parte2.SinCon.*;
+import parte2.SinCon.LockTicket;
 
 public class OS implements Runnable {
     private ObjectOutputStream foutc;
     private ObjectInputStream finc;
     private Socket sc;
-    private Lock lock;
+    private LockTicket lock;
 
-    public OS(Socket sc, ObjectInputStream finc, ObjectOutputStream foutc, Lock lock) {
+    public OS(Socket sc, ObjectInputStream finc, ObjectOutputStream foutc, LockTicket lock) {
         this.sc = sc;
         this.finc = finc;
         this.foutc = foutc;
@@ -29,54 +28,44 @@ public class OS implements Runnable {
             // Booleano para cerrar conexion
             boolean ok = true;
             while (ok) {
-                
+
                 Mensaje m = (Mensaje) finc.readObject();
-    
+
                 switch (m.getTipo()) {
                     case MSG_CONFIRM_CONEXION:
                         // imprimir conexion establecida por standard output
-                        // lock.takeLock(1);
+                        lock.takeLock(1);
                         System.out.println("[OS]: Conexion establecida");
-                        // lock.releaseLock(1);
+                        lock.releaseLock(1);
                         break;
-                    case MSG_CONFIRM_LISTA_USUARIOS: 
+                    case MSG_CONFIRM_LISTA_USUARIOS:
                         // imprimir lista usuarios por standard output
                         Msg_confirm_lista_usuarios msg1 = (Msg_confirm_lista_usuarios) m;
                         HashMap<String, List<String>> lista = msg1.getLista();
-                        // lock.takeLock(1);
+
+                        lock.takeLock(1);
                         System.out.println("[OS]: Mostrando lista de usuarios y sus ficheros");
                         for (Entry<String, List<String>> entry : lista.entrySet()) {
                             System.out.println("Usuario: " + entry.getKey());
-                            System.out.println("Ficheros disponibles: " + entry.getValue());  
-                       }
-                        /*for (Usuario u : lista) {
-                            System.out.println(u);
-                        }*/
-                        //msg1.sacarLista();
-                        // lock.releaseLock(1);
+                            System.out.println("Ficheros disponibles: " + entry.getValue());
+                        }
+                        lock.releaseLock(1);
                         break;
-                    
+
                     case MSG_EMITIR_FICHERO:
                         // El servidor me avisa de que otro cliente quiere un fichero que yo tengo
                         Msg_emitir_fichero msg2 = (Msg_emitir_fichero) m;
                         String nombre_fichero = msg2.getFichero();
-                        String nombre_receptor = msg2.getNombreReceptor();
-                        String nombre_emisor = msg2.getNombreEmisor();
+                        String nombre_receptor = msg2.getOrigen();
+                        String nombre_emisor = msg2.getDestino();
                         int puerto = msg2.getPuerto();
 
                         // enviar MENSAJE_PREPARADO_CLIENTESERVIDOR a mi oyente
-                        foutc.writeObject(new Msg_preparado_cs(nombre_emisor,nombre_receptor,puerto, nombre_fichero));
+                        foutc.writeObject(new Msg_preparado_cs(nombre_emisor, nombre_receptor, puerto, nombre_fichero));
                         foutc.flush();
-                        // lock.takeLock(1);
-                        System.out.println("--------------------------------");
-                        System.out.println("[OS] Emitir fichero :");
-                        System.out.println("[OS] puerto :" + puerto);
-                        System.out.println("[OS] nombre receptor :" + nombre_receptor);
-                        System.out.println("[OS] nombre fichero :" + nombre_fichero);
-                        System.out.println("--------------------------------");
-                        // lock.releaseLock(1);
+
                         // Crear proceso EMISOR y espero en accept la conexion
-                        new Thread((new Emisor(nombre_fichero,puerto))).start();
+                        new Thread((new Emisor(nombre_fichero, puerto))).start();
                         break;
                     case MSG_PREPARADO_SC:
                         // El servidor me avisa de que el cliente que tiene el fichero que quiero esta
@@ -85,22 +74,24 @@ public class OS implements Runnable {
                         Msg_preparado_sc msg3 = (Msg_preparado_sc) m;
                         int puerto_emisor = msg3.getPuerto();
                         String IPemisor = msg3.getIP();
-                        String file_name= msg3.getNombreFichero();
+                        String file_name = msg3.getNombreFichero();
 
                         // Crear proceso RECEPTOR
-                        (new Thread((new Receptor(puerto_emisor,IPemisor, file_name)))).start();
+                        (new Thread((new Receptor(puerto_emisor, IPemisor, file_name)))).start();
                         break;
                     case MSG_CONFIRM_CERRAR_CONEXION:
                         // imprimir adios por standard output
-                        // lock.takeLock(1);
+                        lock.takeLock(1);
                         System.out.println("[OS]: Conexion cerrada. Adios :)");
-                        // lock.releaseLock(1);
+                        lock.releaseLock(1);
+
+                        // Nos salimos
                         ok = false;
                         break;
                     default:
-                        // lock.takeLock(1);
+                        lock.takeLock(1);
                         System.out.println("[OS]: Mensaje no valido");
-                        // lock.releaseLock(1);
+                        lock.releaseLock(1);
                         break;
                 }
             }
@@ -113,6 +104,5 @@ public class OS implements Runnable {
             System.out.println("[OS]: Error en OS");
         }
     }
-
 
 }

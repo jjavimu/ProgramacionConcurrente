@@ -7,16 +7,12 @@ import parte2.Usuario;
 public class Msg_confirm_lista_usuarios extends Mensaje{
     private HashMap<String, List<String>> usuarios;
 
-    public Msg_confirm_lista_usuarios(HashMap<String, List<String>> usuarios){
-        super(TipoMensaje.MSG_CONFIRM_LISTA_USUARIOS);  
+    public Msg_confirm_lista_usuarios(HashMap<String, List<String>> usuarios, String nombre_emisor, String nombre_receptor){
+        super(TipoMensaje.MSG_CONFIRM_LISTA_USUARIOS, nombre_emisor, nombre_receptor);  
         this.usuarios = usuarios;
     }
 
     public HashMap<String, List<String>> getLista(){
         return this.usuarios;
-    }
-
-    public void sacarLista(){
-        System.out.println(usuarios);
     }
 }

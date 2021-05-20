@@ -21,8 +21,11 @@ public class Servidor {
     public static void main(String[] args) throws Exception {
         // Tabla de usuarios
         MUsuarios tablaUsuarios = new MUsuarios();
+        SemLectorEscritor sem_usuarios = new SemLectorEscritor();
+
         // Tabla fichero - usuarios
         MFicheros tablaFicheros = new MFicheros(); // de los conectados
+        SemLectorEscritor sem_ficheros = new SemLectorEscritor();
         // Tabla usuario - flujos E/S
         Canales tablaCanales = new Canales(); // de los conectados
         MonitorLectorEscritor monitor_canales = new MonitorLectorEscritor(); // Para la EM de tablaCanales
@@ -91,7 +94,7 @@ public class Servidor {
             // Me quedo esperando a la peticion de inicio de sesion
             Socket si = ss.accept();
             // Asocio un hilo de ejecucion a cada usuario
-            (new Thread((new OC(si, tablaUsuarios, tablaFicheros, tablaCanales, puerto, sem_puerto,monitor_canales)))).start();
+            (new Thread((new OC(si, tablaUsuarios, tablaFicheros, tablaCanales, puerto, sem_puerto,monitor_canales, sem_ficheros, sem_usuarios)))).start();
         }
     }
 }

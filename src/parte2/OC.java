@@ -4,7 +4,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,10 +23,11 @@ public class OC implements Runnable {
     private MonitorLectorEscritor monitor_canales;
     private Puerto puerto;
     private Semaphore control_puerto;
-
+    private SemLectorEscritor sem_ficheros;
+    private SemLectorEscritor sem_usuarios;
 
     public OC(Socket si, MUsuarios tablaUsuarios, MFicheros tablaFicheros, Canales tablaCanales, Puerto puerto,
-            Semaphore sem, MonitorLectorEscritor monitor_canales) {
+            Semaphore sem, MonitorLectorEscritor monitor_canales, SemLectorEscritor sem_ficheros, SemLectorEscritor sem_usuarios) {
         this.si = si;
         this.tablaFicheros = tablaFicheros;
         this.tablaCanales = tablaCanales;
@@ -35,7 +35,8 @@ public class OC implements Runnable {
         this.control_puerto = sem;
         this.monitor_canales = monitor_canales;
         this.puerto = puerto;
-
+        this.sem_ficheros = sem_ficheros;
+        this.sem_usuarios = sem_usuarios;
     }
 
     public void run() { // Proporcionar concurrencia en las sesiones de cada usuario con el servidor
@@ -59,7 +60,12 @@ public class OC implements Runnable {
                         String nombre = msg_con.getOrigen();
                         InetAddress ip = msg_con.getIP();
 
-                        if (tablaUsuarios.conectarUsuario(nombre,ip)) {
+                        sem_usuarios.request_write();
+                        boolean conectado = tablaUsuarios.conectarUsuario(nombre,ip);
+                        sem_usuarios.release_write();
+
+
+                        if (conectado) {
                             // Suponemos que no van a conectarse dos personas con el mismo nombre a la vez
                             // Habria que controlar este error
 
@@ -69,9 +75,13 @@ public class OC implements Runnable {
                             tablaCanales.setCanales(nombre, fin, fout);
                             monitor_canales.release_write();
 
+                            sem_usuarios.request_read();
                             List<String> ficheros = tablaUsuarios.getFicheros(nombre);
-                            
+                            sem_usuarios.release_read();
+
+                            sem_ficheros.request_write();
                             tablaFicheros.setFicheros(ficheros, nombre);
+                            sem_ficheros.release_write();
 
                             // envio mensaje confirmacion conexion fout
                             fout.writeObject(new Msg_confirm_conexion("Servidor",nombre));
@@ -80,8 +90,10 @@ public class OC implements Runnable {
                         break;
                     }
                     case MSG_LISTA_USUARIOS: {
+                        sem_usuarios.request_read();
                         HashMap<String, List<String>> n_u = tablaUsuarios.getLista(false); // false = solo conectados
                         //System.out.println(n_u);
+                        sem_usuarios.release_read();
 
                         // envio mensaje confirmacion lista usuarios fout
                         fout.writeObject(new Msg_confirm_lista_usuarios(n_u, "Servidor",m.getOrigen()));
@@ -92,13 +104,18 @@ public class OC implements Runnable {
                         String nombre_usuario = m.getOrigen();
 
                         // eliminar informacion del usuario (en las tablas)
+                        sem_usuarios.request_write();
                         tablaUsuarios.desconectar(nombre_usuario);
+                        sem_usuarios.release_write();
+
 
                         monitor_canales.request_write();
                         tablaCanales.desconectar(nombre_usuario);
                         monitor_canales.release_write();
                         
+                        sem_ficheros.request_write();
                         tablaFicheros.desconectar(nombre_usuario);
+                        sem_ficheros.release_write();
 
                         // envio mensaje confirmacion cerrar conexion fout               
                         fout.writeObject(new Msg_confirm_cerrar_conexion("Servidor",nombre_usuario));
@@ -113,8 +130,9 @@ public class OC implements Runnable {
                         String nombre_receptor = msg3.getOrigen();
 
                         // Buscar usuario que contiene el fichero
+                        sem_ficheros.request_read();
                         String nombre_emisor = tablaFicheros.buscarUsuario(nombre_fichero);
-                        
+                        sem_ficheros.release_read();
                         
                         if (nombre_emisor != null) {
                             // Suponemos que el fichero va a estar siempre
@@ -139,8 +157,13 @@ public class OC implements Runnable {
                             fout_emisor.flush();
                             
                              // actualizar tabla ficheros suponiendo que emisor-receptor funcion bien
+                            sem_ficheros.request_write();
                             tablaFicheros.actualizar(nombre_receptor, nombre_fichero);
+                            sem_ficheros.release_write();
+
+                            sem_usuarios.request_write();
                             tablaUsuarios.actualizar(nombre_receptor, nombre_fichero);
+                            sem_usuarios.release_write();
                         }
                         break;
                     }
@@ -150,8 +173,10 @@ public class OC implements Runnable {
                         String nombre_rec = msg4.getDestino();
                         String nombre_e = msg4.getOrigen();
                         String file_name = msg4.getNombreFichero();
-                        
+
+                        sem_usuarios.request_read();
                         InetAddress IPemisor = tablaUsuarios.getIP(nombre_e); 
+                        sem_usuarios.release_read();
                         
                         //System.out.println("--------------------------------");
                         // System.out.println("[OC]: puerto del emisor: " + puerto_emisor);

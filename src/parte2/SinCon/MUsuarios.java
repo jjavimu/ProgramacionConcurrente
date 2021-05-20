@@ -19,7 +19,7 @@ public class MUsuarios {
     // Dado un usuario, si no existe lo mete en la tabla
     // si existe y no esta conectado devuelve cierto y lo conecta
     // si existe y esta conectado devuelve falso
-    public synchronized boolean conectarUsuario(String nombre_usuario, InetAddress ip){
+    public boolean conectarUsuario(String nombre_usuario, InetAddress ip){
         boolean ok = true;
         Usuario usuario_info = tabla.get(nombre_usuario);
          if(usuario_info == null){

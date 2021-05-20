@@ -11,7 +11,7 @@ public class MFicheros {
     public MFicheros(){}
 
     // Dado un fichero, me devuelve un cliente que lo tenga y este conectado
-    public synchronized String buscarUsuario (String nombre_fichero){
+    public String buscarUsuario (String nombre_fichero){
         Set<String> usuarios = tabla.get(nombre_fichero); // Devuelve null, o la lista (no vacia) de usuarios que lo tienen
         String nombre_usuario=null;
         if (usuarios != null && !usuarios.isEmpty()){
@@ -20,7 +20,7 @@ public class MFicheros {
         return nombre_usuario;
     } 
 
-    public synchronized void setFicheros(List<String> ficheros, String nombre){
+    public void setFicheros(List<String> ficheros, String nombre){
         // Recorremos la lista de los ficheros del usuario
         for(String nombre_fichero: ficheros){
             Set<String> lista = tabla.get(nombre_fichero);
@@ -35,18 +35,18 @@ public class MFicheros {
         }
     }
 
-    public synchronized void desconectar(String nombre_usuario) { // TENER UN SET PARA ELIMINAR
+    public void desconectar(String nombre_usuario) { // TENER UN SET PARA ELIMINAR
         for (Map.Entry<String, Set<String>> entry : tabla.entrySet()) {
             // System.out.println("clave=" + entry.getKey() + ", valor=" + entry.getValue());
             entry.getValue().remove(nombre_usuario); // no estoy seguro de si compara bien pero creo que si
         }
     }
 
-	public synchronized void actualizar(String nombre_receptor, String nombre_fichero) {
+	public void actualizar(String nombre_receptor, String nombre_fichero) {
         tabla.get(nombre_fichero).add(nombre_receptor);
 	}
     
-    public synchronized List<String> getLista(){
+    public List<String> getLista(){
         List<String> devolver = new ArrayList<>();
         for (Map.Entry<String, Set<String>> entry : tabla.entrySet()) {
             for(String s: entry.getValue()){

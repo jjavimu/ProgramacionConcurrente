@@ -13,7 +13,7 @@ public class Cliente{
     
     public static void main(String[] args) throws Exception { // main : interactuar con el usuario
         Scanner teclado = new Scanner(System.in);
-        System.out.println("Introduce el nombre del host: ");
+        System.out.println("Introduce la ip del host: ");
          // IP del servidor
         String host = teclado.nextLine();//"MacBook-Pro-de-Javi.local"; 
 

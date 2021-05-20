@@ -56,12 +56,12 @@ public class Emisor implements Runnable { // Funciona como el servidor de la ent
             
             
             // -----------------------------------------------------------
-            System.out.println("Buscando...");
+            System.out.println("[Emisor]: Buscando " + nombre_fichero + " ...");
             try {
                 if( enviarFichero(fout) != false)
-                    System.out.println("Se lo he mandado");
+                    System.out.println("[Emisor]: Fichero "  + nombre_fichero + " enviado");
             } catch (IOException e) {
-                System.out.println("Error en el envío del fichero");
+                System.out.println("[Emisor]: Error en el envío del fichero " + nombre_fichero);
             }
 
             /*File fichero = new File("src/parte2/ClienteRecursos/" + this.nombre_fichero); // ruta

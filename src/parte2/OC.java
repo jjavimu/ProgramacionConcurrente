@@ -2,6 +2,7 @@ package parte2;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ public class OC implements Runnable {
     private MonitorLectorEscritor monitor_canales;
     private Puerto puerto;
     private Semaphore control_puerto;
+
 
     public OC(Socket si, MUsuarios tablaUsuarios, MFicheros tablaFicheros, Canales tablaCanales, Puerto puerto,
             Semaphore sem, MonitorLectorEscritor monitor_canales) {
@@ -53,9 +55,11 @@ public class OC implements Runnable {
                 switch (m.getTipo()) {
                     case MSG_CONEXION: {
                         // guardar informacion del usuario (en las tablas)
-                        String nombre = m.getOrigen();
+                        Msg_conexion msg_con = (Msg_conexion) m;
+                        String nombre = msg_con.getOrigen();
+                        InetAddress ip = msg_con.getIP();
 
-                        if (tablaUsuarios.conectarUsuario(nombre)) {
+                        if (tablaUsuarios.conectarUsuario(nombre,ip)) {
                             // Suponemos que no van a conectarse dos personas con el mismo nombre a la vez
                             // Habria que controlar este error
 
@@ -147,7 +151,7 @@ public class OC implements Runnable {
                         String nombre_e = msg4.getOrigen();
                         String file_name = msg4.getNombreFichero();
                         
-                        String IPemisor = tablaUsuarios.getIP(nombre_e); 
+                        InetAddress IPemisor = tablaUsuarios.getIP(nombre_e); 
                         
                         //System.out.println("--------------------------------");
                         // System.out.println("[OC]: puerto del emisor: " + puerto_emisor);
@@ -178,7 +182,7 @@ public class OC implements Runnable {
             
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("[OC]: Error OC");
+            System.out.println("[OC]: Error desconexión abrupta OC");
         }
     }
 }

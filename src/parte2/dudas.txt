@@ -9,3 +9,48 @@ COSAS QUE HAY QUE HACER
 - FICHEROS: Emisor/Receptor + Servidor (Actualizar fichero al salirse el servidor)
 - Probar la entrega 1 en distintos ordenadores (IP). ORGANIZAR LAS IP.
 - QUE LAS DESCARGAS Y LOS RECURSOS ESTÉN EN UNA MISMA CARPETA
+
+
+
+
+
+MAXIMO DE USUARIOS + LOCK: ----------------------------------------------
+
+Servidor.java:
+int MAX_USERS = 500;
+int n_user = 0;
+LockTicket lock_puerto = new LockTicket(MAX_USERS);
+        ...
+(new Thread((new OC(si, tablaUsuarios, tablaFicheros, tablaCanales, puerto, sem_puerto,monitor_canales, n_user, lock_puerto)))).start();
+
+++n_user;
+if(n_user == MAX_USERS){
+    System.out.println("TUUU, MUCHOS USERS");
+    break;
+}
+
+OC.java
+private int n_user;
+private LockTicket lock_puerto;
+
+public OC(Socket si, MUsuarios tablaUsuarios, MFicheros tablaFicheros, Canales tablaCanales, Puerto puerto,
+        Semaphore sem, MonitorLectorEscritor monitor_canales, int n_user, LockTicket lock_puerto) {
+    this.si = si;
+    this.tablaFicheros = tablaFicheros;
+    this.tablaCanales = tablaCanales;
+    this.tablaUsuarios = tablaUsuarios;
+    this.control_puerto = sem;
+    this.monitor_canales = monitor_canales;
+    this.puerto = puerto;
+
+    this.lock_puerto = lock_puerto;
+    this.n_user = n_user;
+
+}
+
+lock_puerto.takeLock(n_user);
+puerto.actualiza();
+int numero_puerto = puerto.getPuerto();
+lock_puerto.releaseLock(n_user);
+
+---------------------------------------------------------------------

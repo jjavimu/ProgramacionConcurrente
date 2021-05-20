@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -23,11 +25,24 @@ public class Servidor {
         MFicheros tablaFicheros = new MFicheros(); // de los conectados
         // Tabla usuario - flujos E/S
         Canales tablaCanales = new Canales(); // de los conectados
+        MonitorLectorEscritor monitor_canales = new MonitorLectorEscritor(); // Para la EM de tablaCanales
 
         // Creacion y control de puertos 
+        Puerto puerto = new Puerto(500); // Puerto del server. A partir de ese se genera el resto.
         Semaphore sem_puerto = new Semaphore(1); // Para la EM de puerto
-        MonitorLectorEscritor monitor_canales = new MonitorLectorEscritor(); // Para la EM de tablaCanales
         
+        InetAddress ip;
+        String hostname;
+        try {
+            ip = InetAddress.getLocalHost();
+            hostname = ip.getHostName();
+            System.out.println("Your current IP address : " + ip);
+            System.out.println("Your current Hostname : " + hostname);
+            System.out.println("Your current socket port : " + puerto.getPuerto());
+ 
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
         
 
         try {
@@ -50,7 +65,7 @@ public class Servidor {
                     for(int i = 2; i < datos.length; ++i){
                         ficheros.add(datos[i]);
                     }
-                    Usuario nuevo_usuario = new Usuario(datos[0],datos[1],false,ficheros);
+                    Usuario nuevo_usuario = new Usuario(datos[0],InetAddress.getByName(datos[1]),false,ficheros);
                     tablaUsuarios.add(nuevo_usuario);
                 }
                
@@ -61,13 +76,13 @@ public class Servidor {
                 System.out.println(u);
             }
             System.out.println("-----------------------------------");
+            br.close();
         } catch (FileNotFoundException e) {
             System.out.println("Fichero users.txt no encontrado");
             System.exit(1);
         }
 
         // Crear ServerSocket
-        Puerto puerto = new Puerto(500); // Puerto del server. A partir de ese se genera el resto.
         ServerSocket ss = new ServerSocket(puerto.getPuerto());
         
         // serversocket.getLocalPort

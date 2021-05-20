@@ -1,5 +1,6 @@
 package parte2.SinCon;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,18 +19,19 @@ public class MUsuarios {
     // Dado un usuario, si no existe lo mete en la tabla
     // si existe y no esta conectado devuelve cierto y lo conecta
     // si existe y esta conectado devuelve falso
-    public synchronized boolean conectarUsuario(String nombre_usuario){
+    public synchronized boolean conectarUsuario(String nombre_usuario, InetAddress ip){
         boolean ok = true;
         Usuario usuario_info = tabla.get(nombre_usuario);
          if(usuario_info == null){
              // Introducimos el usuario en la base de datos
-             tabla.put(nombre_usuario, new Usuario(nombre_usuario,"localhost",true,new ArrayList<>()));
+             tabla.put(nombre_usuario, new Usuario(nombre_usuario,ip,true,new ArrayList<>()));
          }
 
          else if(usuario_info.getConectado()) {
              ok = false;
          } else{
              usuario_info.setConectado(true);
+             usuario_info.setDirIP(ip);
          }
         return ok;
     }
@@ -58,7 +60,7 @@ public class MUsuarios {
         return tabla.get(nombre).getFicheros();
     }
 
-    public synchronized String getIP(String nombre){
+    public synchronized InetAddress getIP(String nombre){
         return tabla.get(nombre).getDirIP();
     }
 

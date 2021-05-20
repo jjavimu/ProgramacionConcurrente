@@ -2,6 +2,7 @@ package parte2.Mensajes;
 
 import java.io.Serializable;
 
+
 public class Mensaje implements Serializable{
     // Tipo de mensaje
     private TipoMensaje tipo_mensaje;
@@ -26,4 +27,5 @@ public class Mensaje implements Serializable{
     public String getDestino(){
         return destino;
     }
+
 }

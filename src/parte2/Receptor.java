@@ -3,13 +3,14 @@ package parte2;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 
 public class Receptor implements Runnable { // Funciona como el cliente de la entrega 1
     private int puerto;
-    private String IP;
+    private InetAddress IP;
     private String nombre_fichero;
-    public Receptor(int puerto,String IP, String fichero) {
+    public Receptor(int puerto,InetAddress IP, String fichero) {
         this.puerto = puerto;
         this.IP = IP;
         this.nombre_fichero = fichero;
@@ -39,6 +40,7 @@ public class Receptor implements Runnable { // Funciona como el cliente de la en
             // Recibe el fichero -------------------------------------
             try{
                 descargarFichero(finr);
+                System.out.println("[Receptor]: Fichero " + nombre_fichero + " recibido");
             } catch (IOException e){
                 System.out.println("[Receptor]: Error en la descarga del fichero");
             }
@@ -46,7 +48,7 @@ public class Receptor implements Runnable { // Funciona como el cliente de la en
 
             finr.close();
             sr.close();
-            System.out.println("[Receptor]: Conexion finalizada con el servidor");
+            System.out.println("[Receptor]: Conexion finalizada con el emisor");
 
         } catch (Exception e) {
             e.printStackTrace();

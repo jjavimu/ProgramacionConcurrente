@@ -14,7 +14,7 @@ public class MFicheros {
     public synchronized String buscarUsuario (String nombre_fichero){
         Set<String> usuarios = tabla.get(nombre_fichero); // Devuelve null, o la lista (no vacia) de usuarios que lo tienen
         String nombre_usuario=null;
-        if (usuarios != null){
+        if (usuarios != null && !usuarios.isEmpty()){
             nombre_usuario = usuarios.iterator().next();// Seleccionamos el primero que esté
         }
         return nombre_usuario;

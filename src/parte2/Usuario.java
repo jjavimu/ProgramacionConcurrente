@@ -1,6 +1,7 @@
 package parte2;
 
 import java.io.Serializable;
+import java.net.InetAddress;
 import java.util.*;
 
 public class Usuario implements Serializable { // Representa un usuario registrado en el sistema
@@ -8,7 +9,7 @@ public class Usuario implements Serializable { // Representa un usuario registra
     // Identificador del usuario (es unico)
     private String nombre;
     // Direccion ip
-    private String dirIP;
+    private InetAddress dirIP;
     // Lista de informacion compartida
     private List<String> ficheros;
     // Indica si el usuario esta o no conectado
@@ -16,7 +17,7 @@ public class Usuario implements Serializable { // Representa un usuario registra
 
     // El servidor almacena la info sobre todos los usuarios registrados en el sistema (instancias de esta clase)
 
-    public Usuario(String nombre, String dirIP, boolean conectado, List<String> ficheros){
+    public Usuario(String nombre, InetAddress dirIP, boolean conectado, List<String> ficheros){
         this.nombre = nombre;
         this.conectado = conectado;
         this.dirIP = dirIP;
@@ -27,8 +28,11 @@ public class Usuario implements Serializable { // Representa un usuario registra
         return this.nombre;
     }
 
-    public String getDirIP() {
+    public InetAddress getDirIP() {
         return this.dirIP;
+    }
+    public void setDirIP(InetAddress ip) {
+        this.dirIP = ip;
     }
 
     public List<String> getFicheros() {

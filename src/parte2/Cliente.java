@@ -2,6 +2,7 @@ package parte2;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -11,11 +12,15 @@ import parte2.SinCon.*;
 public class Cliente{
     
     public static void main(String[] args) throws Exception { // main : interactuar con el usuario
+        Scanner teclado = new Scanner(System.in);
+        System.out.println("Introduce el nombre del host: ");
          // IP del servidor
-        String IP = "localhost";  
+        String host = teclado.nextLine();//"MacBook-Pro-de-Javi.local"; 
+
+        // IP del cliente
+        InetAddress my_ip = InetAddress.getLocalHost();
 
         // Preguntar el nombre del usuario
-        Scanner teclado = new Scanner(System.in);
         System.out.println("Introduce el nombre de usuario: ");
         String nombre_usuario = teclado.nextLine();
 
@@ -28,7 +33,7 @@ public class Cliente{
         */
 
         // Creamos socket con el servidor
-        Socket sc = new Socket(IP, 500); 
+        Socket sc = new Socket(host, 500); 
         ObjectOutputStream foutc = new ObjectOutputStream(sc.getOutputStream());
         ObjectInputStream finc = new ObjectInputStream(sc.getInputStream());
 
@@ -37,7 +42,7 @@ public class Cliente{
         (new Thread(new OS(sc,finc,foutc,lock))).start();
         
         // Enviar mensaje de conexion al servidor
-        foutc.writeObject(new Msg_conexion(nombre_usuario,"Servidor"));
+        foutc.writeObject(new Msg_conexion(nombre_usuario,"Servidor",my_ip));
         foutc.flush();
 
         /*
@@ -97,7 +102,7 @@ public class Cliente{
                     break;
             }
         }
-    
+        
         teclado.close();
     }
 }

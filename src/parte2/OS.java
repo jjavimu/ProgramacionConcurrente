@@ -2,6 +2,7 @@ package parte2;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
@@ -73,7 +74,7 @@ public class OS implements Runnable {
                         // Llega direccion Ip y puerto del propietario de fichero
                         Msg_preparado_sc msg3 = (Msg_preparado_sc) m;
                         int puerto_emisor = msg3.getPuerto();
-                        String IPemisor = msg3.getIP();
+                        InetAddress IPemisor = msg3.getIP();
                         String file_name = msg3.getNombreFichero();
 
                         // Crear proceso RECEPTOR

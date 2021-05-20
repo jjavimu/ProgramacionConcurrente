@@ -36,11 +36,11 @@ public class Receptor implements Runnable { // Funciona como el cliente de la en
             ObjectInputStream finr = new ObjectInputStream(sr.getInputStream());
 
             // Conexion establecida
-            System.out.println("[Receptor]: Conexion establecida con el emisor");
+            // System.out.println("[Receptor]: Conexion establecida con el emisor");
             // Recibe el fichero -------------------------------------
             try{
                 descargarFichero(finr);
-                System.out.println("[Receptor]: Fichero " + nombre_fichero + " recibido");
+                // System.out.println("[Receptor]: Fichero " + nombre_fichero + " recibido");
             } catch (IOException e){
                 System.out.println("[Receptor]: Error en la descarga del fichero");
             }
@@ -48,7 +48,7 @@ public class Receptor implements Runnable { // Funciona como el cliente de la en
 
             finr.close();
             sr.close();
-            System.out.println("[Receptor]: Conexion finalizada con el emisor");
+            // System.out.println("[Receptor]: Conexion finalizada con el emisor");
 
         } catch (Exception e) {
             e.printStackTrace();

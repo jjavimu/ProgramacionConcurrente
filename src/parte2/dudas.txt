@@ -1,6 +1,5 @@
 
 DUDAS PRACTICA
-- IP
 - monitores readers/writers arreglar
 
 

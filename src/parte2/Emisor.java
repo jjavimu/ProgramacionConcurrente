@@ -44,22 +44,22 @@ public class Emisor implements Runnable { // Funciona como el servidor de la ent
             ServerSocket es = new ServerSocket(puerto);
             
             // Me quedo esperando a la peticion del receptor
-            System.out.println("[Emisor]: ServerSocket creado y antes de accept");
+            // System.out.println("[Emisor]: ServerSocket creado y antes de accept");
             Socket si = es.accept();
 
             // Accedo flujo de salida del emisor
             ObjectOutputStream fout = new ObjectOutputStream(si.getOutputStream());
 
             // Conexion establecida
-            System.out.println("[Emisor]: Conexion establecida con el Receptor");
+            // System.out.println("[Emisor]: Conexion establecida con el Receptor");
 
             
             
             // -----------------------------------------------------------
-            System.out.println("[Emisor]: Buscando " + nombre_fichero + " ...");
+            // System.out.println("[Emisor]: Buscando " + nombre_fichero + " ...");
             try {
-                if( enviarFichero(fout) != false)
-                    System.out.println("[Emisor]: Fichero "  + nombre_fichero + " enviado");
+                if( enviarFichero(fout) != false){}
+                    // System.out.println("[Emisor]: Fichero "  + nombre_fichero + " enviado");
             } catch (IOException e) {
                 System.out.println("[Emisor]: Error en el envío del fichero " + nombre_fichero);
             }
@@ -73,7 +73,7 @@ public class Emisor implements Runnable { // Funciona como el servidor de la ent
             // ------------------------------------------------------------
 
             // Conexion finalizada
-            System.out.println("[Emisor]: Conexion finalizada con el Receptor");
+            //System.out.println("[Emisor]: Conexion finalizada con el Receptor");
 
             fout.close();
             si.close();

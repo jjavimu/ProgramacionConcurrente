@@ -1,6 +1,6 @@
-# Práctica
+# Práctica Programación Concurrente (UCM)
 
-Creación de un sistema cliente-servidor para intercambiar información.
+Creación de un sistema cliente-servidor concurrente, con semáforos, locks y monitores para intercambiar información.
 
 
 ### Compilar:

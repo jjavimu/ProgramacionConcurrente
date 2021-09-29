@@ -17,3 +17,5 @@ Creación de un sistema cliente-servidor concurrente, con semáforos, locks y mo
 - Para ejecutar el __CLIENTE__: (desde _src/_)
     
     java -cp "parte2/bin" parte2.Cliente
+
+Proyecto realizado en parejas por Ángela Ruiz y Javier Mulero

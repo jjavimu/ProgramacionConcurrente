@@ -1,4 +1,9 @@
-   ### Compilar:
+# Práctica
+
+Creación de un sistema cliente-servidor para intercambiar información.
+
+
+### Compilar:
 
 - Para crear los .class: (desde _src/parte2/_)
 

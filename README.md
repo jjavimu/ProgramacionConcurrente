@@ -3,7 +3,7 @@
 Creación de un sistema cliente-servidor concurrente, con semáforos, locks y monitores para intercambiar información.
 
 
-### Compilar:
+### Compilar:
 
 - Para crear los .class: (desde _src/parte2/_)
 
